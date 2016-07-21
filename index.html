@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width'>
+    <title>
+        Киноглушитель
+    </title>
+    <link rel='stylesheet' href='./css/main.css'>
+    <link rel='stylesheet' href='./css/controls.css'>
+    <link rel='stylesheet' href='./css/reset.css'>
+    <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <header class='main-header'>
+        <h1> Киноглушитель </h1>
+    </header>
+    <div class='player'>
+        <canvas class='player__webgl-canvas'></canvas>
+        <canvas class='player__canvas'></canvas>
+        <div class='player__subs'></div>
+        <div class="controls">
+            <button class='controls__play-button controls__play-button_used'></button>
+            <div class='controls__time-line'>
+                <div class='time-line__progress'></div>
+            </div>
+        </div>
+    </div>
+    <div class='popup'>
+        <img class='popup__logo' src='./pictures/logo.png'>
+        <input class='popup__input popup__movie-input' type='text' value='./video/1.mp4'>
+        <input class='popup__input popup__subs-input' type='text' value='./video/subs.srt'>
+        <input class='popup__input popup__sound-input' type='text' value='./video/soundtrack.ogg'>
+        <button class='popup__apply-button'> Заглушить </button>
+    </div>
+    <video class='video-main' src='./video/1.mp4'></video>
+    <video class='video-effect' loop='true' src='./video/effect2.mp4'></video>
+    <audio class='video-soundtrack' src='./video/soundtrack.ogg' loop='true'></audio>
+    <script src='./bundle.js' autoplay></script>
+</body>
+</html>

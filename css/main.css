@@ -1,0 +1,96 @@
+.main-header {
+    text-align: center;
+    font-size: 50px;
+    font-family: Arial;
+    padding: 30px;
+}
+
+.player {
+    position: relative;
+    margin: auto;
+    width: 900px;
+    height: 500px;
+    background: black;
+}
+
+
+.popup {
+    position: absolute;
+    display: flex;
+    flex-shrink: 100px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #d8d8d8;
+}
+
+.popup__logo {
+    margin-top: -50px;
+    margin-bottom: 80px;
+    width: 30%;
+}
+
+.popup__input {
+    padding-left: 10px;
+    margin-bottom: 30px;
+    min-width: 150px;
+    width: 20%;
+    height: 50px;
+    box-shadow: 5px 5px 5px RGB(200, 200, 200);
+    box-sizing: border-box;
+    font: 15px Arial gray;
+}
+
+.popup__apply-button {
+    width: 10%;
+    margin-top: 20px;
+    margin-left: 10%;
+    min-width: 100px;
+    height: 50px;
+    text-align: center;
+}
+
+.player__canvas {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.popup__subs-input {
+
+}
+
+.player__subs {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    color: white;
+    font: 25px Arial;
+    font-family: 'Oranienbaum';
+}
+
+.player__webgl-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+video {
+    display: none;
+}
+
+#grainy {
+    display: none;
+}
