@@ -218,24 +218,24 @@
 	            this.updateTime();
 	            this.timeStart = new Date();
 	            this.status.play = true;
-	            this.videoEffect.play();
-	            this.sound.play();
 	            this.noizeGain.connect(this.audioContext.destination);
 	            if (this.status.eventType === 'video') {
 	                this.videoMain.play();
 	            }
+	            this.videoEffect.play();
+	            this.sound.play();
 	        }
 	    }, {
 	        key: 'pause',
 	        value: function pause() {
 	            this.updateTime();
 	            this.status.play = false;
-	            this.videoEffect.pause();
-	            this.sound.pause();
 	            this.noizeGain.disconnect();
 	            if (this.status.eventType === 'video') {
 	                this.videoMain.pause();
 	            }
+	            this.videoEffect.pause();
+	            this.sound.pause();
 	        }
 	    }, {
 	        key: 'onTimeLineClick',
@@ -378,7 +378,7 @@
 	function init() {
 	    webglCanvas = document.querySelector('.player__webgl-canvas');
 	    canvas = document.querySelector('.player__canvas');
-	    webglContext = webglCanvas.getContext('webgl');
+	    webglContext = webglCanvas.getContext('webgl') || webglCanvas.getContext('experimental-webgl');
 	    prepareWebGL(webglCanvas, webglContext, canvas);
 	}
 
