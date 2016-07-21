@@ -134,23 +134,23 @@ class Player {
         this.updateTime();
         this.timeStart = new Date();
         this.status.play = true;
-        this.videoEffect.play();
-        this.sound.play();
         this.noizeGain.connect(this.audioContext.destination);
         if (this.status.eventType === 'video') {
             this.videoMain.play();
         }
+        this.videoEffect.play();
+        this.sound.play();
     }
 
     pause() {
         this.updateTime();
         this.status.play = false;
-        this.videoEffect.pause();
-        this.sound.pause();
         this.noizeGain.disconnect();
         if (this.status.eventType === 'video') {
             this.videoMain.pause();
         }
+        this.videoEffect.pause();
+        this.sound.pause();
     }
 
     onTimeLineClick(e) {

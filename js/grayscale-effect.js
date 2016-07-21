@@ -115,7 +115,7 @@ function makeGrayScale() {
 function init() {
     webglCanvas = document.querySelector('.player__webgl-canvas');
     canvas = document.querySelector('.player__canvas');
-    webglContext = webglCanvas.getContext('webgl');
+    webglContext = webglCanvas.getContext('webgl') || webglCanvas.getContext('experimental-webgl');
     prepareWebGL(webglCanvas, webglContext, canvas);
 }
 
