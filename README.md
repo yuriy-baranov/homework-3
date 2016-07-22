@@ -1,3 +1,5 @@
+####UPD. добавил preloader и улучшил эффект зернистости, надеюсь, работа еще не проверена =)
+
 Киноглушитель протестирован в Chrome на Windows.
 
 #[Перейти на Gh-Pages](https://yuriy-baranov.github.io/homework-3/)

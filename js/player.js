@@ -10,23 +10,65 @@ class Player {
         this.videoEffect = document.querySelector('.video-effect');
         this.timeLine = document.querySelector('.controls__time-line');
         this.timeLineProgress = document.querySelector('.time-line__progress');
+        this.controls = document.querySelector('.player__controls');
         this.playButton = document.querySelector('.controls__play-button');
-        this.sound = document.querySelector('.video-soundtrack');
+        this.audioElement = document.querySelector('.video-soundtrack');
+        this.loadingIcon = document.querySelector('.player__loading-icon');
 
 
-        this.videoMain.addEventListener('loadeddata', this.initCanvas.bind(this));
-        this.videoMain.addEventListener('canplay', this.renderFrame.bind(this));
+        this.sources = document.querySelector('.player__sources');
         this.playButton.addEventListener('click', this.onPlayButtonToggle.bind(this));
         this.timeLine.addEventListener('click', this.onTimeLineClick.bind(this));
-        
+
         this.timer = 0;
         this.status = { eventType: 'video', play: false };
         this.subs = [];
         this.subsFullDuration = 0;
         this.canvasContext = this.canvas.getContext('2d');
-        this.grainyEffect = document.getElementById('grainy');
-        this.videoMain.volume = 0;
+        this.videoMain.muted = true;
         this.initSound();
+
+        this.dataLoaded = { videoMain: false, videoEffect: false, videoSoundtrack: false };
+        this.sources.addEventListener('canplay', this.checkSourcesLoaded.bind(this), true);
+        this.sources.addEventListener('waiting', this.waitLoading.bind(this), true);
+    }
+
+    waitLoading(e) {
+        this.wasWaiting = true;
+        this.dataLoaded[e.target.dataset.type] = false;
+        this.controls.style.transform = 'translateY(100px)';
+        this.loadingIcon.style.visibility = 'visible';
+        if (this.status.play) {
+            this.onPlayButtonToggle();
+        }
+    }
+
+    checkSourcesLoaded(e) {
+        this.dataLoaded[e.target.dataset.type] = true;
+        if (this.dataLoaded.videoEffect && this.dataLoaded.videoMain && this.dataLoaded.videoSoundtrack) {
+            if (this.wasWaiting && !this.status.play) {
+                this.onPlayButtonToggle();
+            }
+            this.initCanvas();
+            this.controls.style.transform = 'translateY(0px)';
+            this.loadingIcon.style.visibility = 'hidden';
+        }
+    }
+
+    initCanvas() {
+        if (this.canvasInited) {
+            return;
+        }
+        this.canvasInited = true;
+        var width = this.videoMain.videoWidth;
+        var height = this.videoMain.videoHeight;
+        this.canvas.width = width;
+        this.canvas.height = height;
+        this.webglCanvas.width = width;
+        this.webglCanvas.height = height;
+        this.block.style.width = `${900}px`;
+        this.block.style.height = `${height / width * 900}px`;
+        this.mainLoop();
     }
 
     mainLoop() {
@@ -41,14 +83,15 @@ class Player {
     renderFrame() {
         if (this.status.eventType === 'video') {
             this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.canvasContext.drawImage(this.videoMain, 0, 0);
-            makeGrayScale();
-            this.canvasContext.drawImage(this.webglCanvas, 0, 0, this.canvas.width, this.canvas.height);
+            this.canvasContext.drawImage(this.videoMain, 0, 0, this.canvas.width, this.canvas.height);
         }
         else {
             this.showSubs();
         }
+        makeGrayScale();
+        this.canvasContext.drawImage(this.webglCanvas, 0, 0, this.canvas.width, this.canvas.height);
         this.imposeOldEffect();
+        
     }
 
     updateTime() {
@@ -107,18 +150,6 @@ class Player {
         this.canvasContext.globalAlpha = 1;
     }
 
-    initCanvas() {
-        var width = this.videoMain.videoWidth;
-        var height = this.videoMain.videoHeight;
-        this.canvas.width = width;
-        this.canvas.height = height;
-        this.webglCanvas.width = width;
-        this.webglCanvas.height = height;
-        this.block.style.width = `${900}px`;
-        this.block.style.height = `${height / width * 900}px`;
-        this.mainLoop();
-    }
-
     onPlayButtonToggle() {
         if (this.status.play) {
             this.pause();
@@ -139,7 +170,7 @@ class Player {
             this.videoMain.play();
         }
         this.videoEffect.play();
-        this.sound.play();
+        this.audioElement.play();
     }
 
     pause() {
@@ -150,7 +181,7 @@ class Player {
             this.videoMain.pause();
         }
         this.videoEffect.pause();
-        this.sound.pause();
+        this.audioElement.pause();
     }
 
     onTimeLineClick(e) {
@@ -160,7 +191,7 @@ class Player {
         var changedStatus = this.getEventByTime(this.timer);
         this.videoMain.currentTime = changedStatus.videoTime;
         this.updateCurrentEvent();
-        this.sound.currentTime = this.timer % this.sound.duration;
+        this.audioElement.currentTime = this.timer % this.audioElement.duration;
     }
 
     set subtitles(subs) {
@@ -179,7 +210,7 @@ class Player {
         this.audioContext = new AudioContext();
         var audioCtx = this.audioContext;
         var destination = audioCtx.destination;
-        var source = audioCtx.createMediaElementSource(this.sound);
+        var source = audioCtx.createMediaElementSource(this.audioElement);
         var biquadFilter = audioCtx.createBiquadFilter(); 
         biquadFilter.type = "highpass";
         biquadFilter.frequency.value = 900;

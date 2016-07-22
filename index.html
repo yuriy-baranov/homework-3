@@ -12,33 +12,41 @@
     <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet' type='text/css'>
 </head>
 <body>
+    
     <header class='main-header'>
         <h1> Киноглушитель </h1>
     </header>
+
+
     <div class='player'>
         <canvas class='player__webgl-canvas'></canvas>
         <canvas class='player__canvas'></canvas>
-        <div class='player__subs'></div>
-        <div class="controls">
+        <div class='player__loading-icon'></div>
+        <div class="player__controls">
             <button class='controls__play-button controls__play-button_used'></button>
             <div class='controls__time-line'>
                 <div class='time-line__progress'></div>
             </div>
         </div>
+        
+        <div class='player__sources'>
+            <video class='video-main' data-type='videoMain'></video>
+            <video class='video-effect' loop='true' src='./video/effect2.mp4' data-type='videoEffect'></video>
+            <audio class='video-soundtrack' loop='true' data-type='videoSoundtrack'>
+                <source src='./video/soundtrack.ogg' type="audio/ogg">
+                <source src='./video/soundtrack.mp3' type="audio/mpeg">
+            </audio>
+        </div>
     </div>
+
+
     <div class='popup'>
         <img class='popup__logo' src='./pictures/logo.png'>
         <input class='popup__input popup__movie-input' type='text' value='./video/1.mp4'>
         <input class='popup__input popup__subs-input' type='text' value='./video/subs.srt'>
-        <input class='popup__input popup__sound-input' type='text' value='./video/soundtrack.ogg'>
+        <input class='popup__input popup__audio-input' type='text' value='./video/soundtrack.ogg'>
         <button class='popup__apply-button'> Заглушить </button>
     </div>
-    <video class='video-main' src='./video/1.mp4'></video>
-    <video class='video-effect' loop='true' src='./video/effect2.mp4'></video>
-    <audio class='video-soundtrack' loop='true'>
-        <source src='./video/soundtrack.ogg' type="audio/ogg">
-        <source src='./video/soundtrack.mp3' type="audio/mpeg">
-    </audio>
     <script src='./bundle.js' autoplay></script>
 </body>
 </html>

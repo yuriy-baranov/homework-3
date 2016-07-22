@@ -1,4 +1,4 @@
-var webglCanvas, canvas, webglContext;
+var webglCanvas, canvas, webglContext, webglSupport = true;
 
 function postprocessWebGL(canvas, gl, sourceCanvas) {
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sourceCanvas);
@@ -42,19 +42,37 @@ function prepareWebGL(canvas, gl, sourceCanvas) {
             float y = v_texcoord.y;
             float color = grayScaleAt(v_texcoord);
             float newColor = 0.0;
-            float prev = 0.0;
+            float prevRand = 0.0;
+
+            float R = 0.02;
             for (int i = 0; i < 5; i++) {
-                float dx = (random(x, y, prev) - 0.5) / 100.0;
-                float dy = (random(x, y, prev) - 0.5) / 100.0;
+                float dx = (random(x, y, prevRand) - 0.5) * R;
+                float dy = (random(x, y, prevRand) - 0.5) * R;
                 newColor += grayScaleAt(vec2(x + dx, y + dy));
-                prev = dx * dy;
+                prevRand = dx * dy;
             }
             newColor = newColor / 5.0;
             
             // если полученный цвет сильно отличается от исходного, то он сглаживается
-            if (abs(newColor / color) > 1.25) {
+
+            float maxDiff = 1.25;
+
+            if (newColor / color > maxDiff || color / newColor > maxDiff) {
                 newColor = (newColor + color) / 2.0;
             }
+
+            float maxDiff2 = 1.5;
+
+            if (newColor / color > maxDiff2 || color / newColor > maxDiff2) {
+                newColor = (newColor + 2.0 * color) / 3.0;
+            }
+
+            float maxDiff3 = 2.0;
+            
+            if (newColor / color > maxDiff3 || color / newColor > maxDiff3) {
+                newColor = (newColor + 4.0 * color) / 5.0;
+            }
+
             gl_FragColor = vec4(newColor, newColor, newColor, 1.0);
         }
         `;
@@ -116,9 +134,16 @@ function init() {
     webglCanvas = document.querySelector('.player__webgl-canvas');
     canvas = document.querySelector('.player__canvas');
     webglContext = webglCanvas.getContext('webgl') || webglCanvas.getContext('experimental-webgl');
-    prepareWebGL(webglCanvas, webglContext, canvas);
+
+    if (webglContext !== null) {
+        prepareWebGL(webglCanvas, webglContext, canvas);
+    }
+    else {
+        webglSupport = false;
+        alert('Похоже, что в данном браузере не поддерживается webgl :(');
+    }
 }
 
-init()
+init();
 
 module.exports = makeGrayScale;
